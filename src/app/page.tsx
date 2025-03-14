@@ -1,95 +1,156 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import Navbar from '../components/Navbar';
+import Footer from '../components/Footer';
+import FeaturedPost from '../components/FeaturedPost';
+import BlogEntry from '../components/BlogEntry';
+import BlogEntrySmall from '../components/BlogEntrySmall';
+import PostEntryAlt from '../components/PostEntryAlt';
+import Preloader from '../components/Preloader';
+import { fetchNews } from '../lib/api';
 
-export default function Home() {
+export default async function Home() {
+  const featuredPosts = await fetchNews({ limit: 5 });
+  const businessPosts = await fetchNews({ category: 'business', limit: 5 });
+  const culturePosts = await fetchNews({ category: 'culture', limit: 5 });
+  const politicsPosts = await fetchNews({ category: 'politics', limit: 9 });
+  const travelPosts = await fetchNews({ category: 'travel', limit: 4 });
+
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol>
-          <li>
-            Get started by editing <code>src/app/page.tsx</code>.
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <>
+      <Preloader />
+      <Navbar />
 
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-            className={styles.secondary}
-          >
-            Read our docs
-          </a>
+      {/* Featured Posts */}
+      <section className="section bg-light">
+        <div className="container">
+          <div className="row align-items-stretch retro-layout">
+            {featuredPosts.map((post, index) => (
+              <div
+                className={index === 1 ? 'col-md-4 img-5 h-100' : 'col-md-4'}
+                key={post.id}
+              >
+                <FeaturedPost post={post} index={index} />
+              </div>
+            ))}
+          </div>
         </div>
-      </main>
-      <footer className={styles.footer}>
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+      </section>
+
+      {/* Business Section */}
+      <section className="section posts-entry">
+        <div className="container">
+          <div className="row mb-4">
+            <div className="col-sm-6">
+              <h2 className="posts-entry-title">Business</h2>
+            </div>
+            <div className="col-sm-6 text-sm-end">
+              <a href="/category/business" className="read-more">
+                View All
+              </a>
+            </div>
+          </div>
+          <div className="row g-3">
+            <div className="col-md-9">
+              <div className="row g-3">
+                {businessPosts.slice(0, 2).map((post) => (
+                  <BlogEntry key={post.id} post={post} />
+                ))}
+              </div>
+            </div>
+            <div className="col-md-3">
+              <ul className="list-unstyled blog-entry-sm">
+                {businessPosts.slice(2).map((post) => (
+                  <BlogEntrySmall key={post.id} post={post} />
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Culture Section */}
+      <section className="section posts-entry">
+        <div className="container">
+          <div className="row mb-4">
+            <div className="col-sm-6">
+              <h2 className="posts-entry-title">Culture</h2>
+            </div>
+            <div className="col-sm-6 text-sm-end">
+              <a href="/category/culture" className="read-more">
+                View All
+              </a>
+            </div>
+          </div>
+          <div className="row g-3">
+            <div className="col-md-9 order-md-2">
+              <div className="row g-3">
+                {culturePosts.slice(0, 2).map((post) => (
+                  <BlogEntry key={post.id} post={post} />
+                ))}
+              </div>
+            </div>
+            <div className="col-md-3">
+              <ul className="list-unstyled blog-entry-sm">
+                {culturePosts.slice(2).map((post) => (
+                  <BlogEntrySmall key={post.id} post={post} />
+                ))}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Politics Section */}
+      <section className="section">
+        <div className="container">
+          <div className="row mb-4">
+            <div className="col-sm-6">
+              <h2 className="posts-entry-title">Politics</h2>
+            </div>
+            <div className="col-sm-6 text-sm-end">
+              <a href="/category/politics" className="read-more">
+                View All
+              </a>
+            </div>
+          </div>
+          <div className="row">
+            {politicsPosts.map((post) => (
+              <div className="col-lg-4 mb-4" key={post.id}>
+                <PostEntryAlt post={post} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Travel Section */}
+      <div className="section bg-light">
+        <div className="container">
+          <div className="row mb-4">
+            <div className="col-sm-6">
+              <h2 className="posts-entry-title">Travel</h2>
+            </div>
+            <div className="col-sm-6 text-sm-end">
+              <a href="/category/travel" className="read-more">
+                View All
+              </a>
+            </div>
+          </div>
+          <div className="row align-items-stretch retro-layout-alt">
+            <div className="col-md-5 order-md-2">
+              <FeaturedPost post={travelPosts[0]} index={1} />
+            </div>
+            <div className="col-md-7">
+              <FeaturedPost post={travelPosts[1]} index={0} />
+              <div className="two-col d-block d-md-flex justify-content-between">
+                <FeaturedPost post={travelPosts[2]} index={0} />
+                <FeaturedPost post={travelPosts[3]} index={0} />
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <Footer />
+    </>
   );
 }

@@ -9,6 +9,12 @@ services:
       - "3123:3123"
     env_file:
       - .env.local
+    volumes:
+      - ./src/app:/app/src/app          # Đồng bộ thư mục src/app
+      - ./src/components:/app/src/components  # Đồng bộ thư mục components
+      - ./src/lib:/app/src/lib          # Đồng bộ thư mục lib
+      - ./public:/app/public            # Đồng bộ thư mục public
+    command: yarn dev                  # Chạy chế độ development
     networks:
       - frontend-network
 
